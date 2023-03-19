@@ -3,6 +3,7 @@ import axios from "axios";
 
 export default class GuestBookForm extends Component{
     constructor(data) {
+        console.log(data)
         super();
         this.state = { name: '', email: '' , address:'' , message:'' , browser: null , crsfToken: data.crsfToken};
     }
@@ -14,6 +15,7 @@ export default class GuestBookForm extends Component{
     clearForm() {
         this.setState ({ name: '', email: '' , address:'' , message:''})
         document.getElementById("guest-book-form").reset();
+        this.props.loadList()
     }
 
     postGuest() {
@@ -58,7 +60,7 @@ export default class GuestBookForm extends Component{
             <form onSubmit={e=>this.handleSubmit(e)} id={'guest-book-form'}>
                 <div className="form-group">
                     <label>Name:  </label>
-                    <input className="form-control" type="text" name="name" value={this.state.name} onChange={ e=>this.handleChange(e,'name')}/>
+                    <input required={true} className="form-control" type="text" name="name" value={this.state.name} onChange={ e=>this.handleChange(e,'name')}/>
 
                 </div>
                 <div className="form-group">
@@ -67,7 +69,7 @@ export default class GuestBookForm extends Component{
                 </div>
                 <div className="form-group">
                 <label>Email: </label>
-                <input className="form-control" type="email" name="email" value={this.state.email} onChange={e=>this.handleChange(e,'email')}/>
+                <input required={true} className="form-control" type="email" name="email" value={this.state.email} onChange={e=>this.handleChange(e,'email')}/>
                 </div>
                 <div className="form-group">
                 <label>Message:</label>

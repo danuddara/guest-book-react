@@ -12,14 +12,3 @@ if (guestBook) {
     rootGuestBook.render(<GuestBookApp/>);
 }
 
-/**
- *
- * @type {HTMLElement}
- */
-const guestBookForm= document.getElementById('guest-book-app-form')
-if (guestBookForm) {
-    const rootGuestBook = ReactDOMClient.createRoot(guestBookForm)
-    let token = guestBookForm.getAttribute("data-crsf-token");
-    rootGuestBook.render(<GuestBookForm crsfToken={token}/>);
-}
-

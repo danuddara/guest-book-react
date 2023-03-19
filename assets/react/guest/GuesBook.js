@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import axios from "axios";
+import GuestBookForm from "./GuesBookForm";
 
 export default class GuestBookApp extends Component{
-    constructor() {
+    constructor () {
         super();
         this.state = { guests: [], loading: true , pageCount:10 , page:1 , totalRecords:0};
         console.log(this.state)
@@ -32,6 +33,9 @@ export default class GuestBookApp extends Component{
     }
 
     render() {
+        const guestBookForm= document.getElementById('guest-book-app-form')
+        let token = guestBookForm.getAttribute("data-crsf-token");
+
         const loading = this.state.loading;
         const records = this.state.guests.map((guest)=>
             <tr key={guest.id}>
@@ -53,8 +57,16 @@ export default class GuestBookApp extends Component{
             pagination.push(<button className={"btn btn-warning m-1"} onClick={ e => this.pageButtonClick(e,fkey)} key={fkey} >{fkey}</button>)
         }
 
+        const loadGuestList= ()=> {
+            this.getGuests()
+        }
+
         const table =
+
             <div>
+                <div className={"row / mb-5"}>
+                    <GuestBookForm crsfToken={token} loadList={loadGuestList}/>
+                </div>
             <table className="table">
                 <thead>
                 <tr>
