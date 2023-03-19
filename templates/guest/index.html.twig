@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Guest index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="align-content-center">Guest book</h1>
+
+        <div class="row">
+            <div id="guest-book-app-form" data-crsf-token ={{ csrf_token('guest-book') }} class="col-md-6">
+            </div>
+        </div>
+
+        <div id="guest-book-app" class="col-md-12">
+        </div>
+    </div>
+{% endblock %}
