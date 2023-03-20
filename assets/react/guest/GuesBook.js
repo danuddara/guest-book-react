@@ -1,72 +1,74 @@
-import React, {Component} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import GuestBookForm from "./GuesBookForm";
 
-export default class GuestBookApp extends Component{
-    constructor () {
-        super();
-        this.state = { guests: [], loading: true , pageCount:10 , page:1 , totalRecords:0};
-        console.log(this.state)
-    }
+export default function GuestBookApp() {
 
-    componentDidMount() {
-        this.getGuests()
-    }
+    const [guests, setGuests] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [pageCount, setPageCount] = useState(10);
+    const [page, setPage] = useState(1);
+    const [totalRecords, setTotalRecords] = useState(0);
 
-    getGuests() {
-        axios.get('/api/guest/list?p='+this.state.page).then(guests => {
-            this.setState({guests:guests.data, loading:false })
-        }).catch(error=> {
-            console.log (error.message)
+
+    useEffect(() => {
+        getGuests()
+    }, []);
+
+    const getGuests = () => {
+        axios.get('/api/guest/list?p=' + page).then(guests => {
+            setGuests(guests.data)
+            setLoading(false)
+        }).catch(error => {
+            console.log(error.message)
         })
 
         axios.get('/api/guest/count').then(count => {
-            this.setState({totalRecords:count.data })
-        }).catch(error=> {
+            setTotalRecords(count.data)
+        }).catch(error => {
             console.log(error.message)
         })
     }
 
-    pageButtonClick= (event,key)=> {
-        this.state.page = key;
-        this.getGuests()
+    const pageButtonClick = (event, key) => {
+        setPage(key);
+        getGuests()
     }
 
-    render() {
-        const guestBookForm= document.getElementById('guest-book-app-form')
-        let token = guestBookForm.getAttribute("data-crsf-token");
+    const guestBookForm = document.getElementById('guest-book-app-form')
+    let token = guestBookForm.getAttribute("data-crsf-token");
 
-        const loading = this.state.loading;
-        const records = this.state.guests.map((guest)=>
-            <tr key={guest.id}>
-                <td>{ guest.id } </td>
-                <td>{ guest.name }</td>
-                <td>{ guest.email } </td>
-                <td>{ guest.address }</td>
-                <td>{ guest.message }</td>
-                <td>{ guest.browser }</td>
-                <td>{ guest.platform }</td>
-                <td>{ guest.ipAddress }</td>
-            </tr>
-        );
 
-        let pagination = [];
-        let paginationCount = this.state.totalRecords/this.state.pageCount
-        for (let i=0 ; i < paginationCount ;i++) {
-            let fkey = i+1;
-            pagination.push(<button className={"btn btn-warning m-1"} onClick={ e => this.pageButtonClick(e,fkey)} key={fkey} >{fkey}</button>)
-        }
+    const records = guests.map((guest) =>
+        <tr key={guest.id}>
+            <td>{guest.id} </td>
+            <td>{guest.name}</td>
+            <td>{guest.email} </td>
+            <td>{guest.address}</td>
+            <td>{guest.message}</td>
+            <td>{guest.browser}</td>
+            <td>{guest.platform}</td>
+            <td>{guest.ipAddress}</td>
+        </tr>
+    );
 
-        const loadGuestList= ()=> {
-            this.getGuests()
-        }
+    let pagination = [];
+    let paginationCount = totalRecords / pageCount
+    for (let i = 0; i < paginationCount; i++) {
+        let fkey = i + 1;
+        pagination.push(<button className={"btn btn-warning m-1"} onClick={e => pageButtonClick(e, fkey)}
+                                key={fkey}>{fkey}</button>)
+    }
 
-        const table =
+    const loadGuestList = () => {
+        getGuests()
+    }
 
-            <div>
-                <div className={"row / mb-5"}>
-                    <GuestBookForm crsfToken={token} loadList={loadGuestList}/>
-                </div>
+    const table =
+        <div>
+            <div className={"row / mb-5"}>
+                <GuestBookForm crsfToken={token} loadList={loadGuestList}/>
+            </div>
             <table className="table">
                 <thead>
                 <tr>
@@ -81,18 +83,18 @@ export default class GuestBookApp extends Component{
                 </tr>
                 </thead>
                 <tbody>
-                { records }
+                {records}
                 </tbody>
             </table>
-                <div>
+            <div>
                 {pagination}
-                </div>
-            </div>;
+            </div>
+        </div>;
 
-        let show  = loading ? 'loading...' : table;
+    let show = loading ? 'loading...' : table;
 
-        return (
-            show
-        );
-    }
+    return (
+        show
+    );
+
 }
