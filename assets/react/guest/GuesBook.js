@@ -32,7 +32,6 @@ export default function GuestBookApp() {
 
     const pageButtonClick = (event, key) => {
         setPage(key);
-        getGuests()
     }
 
     const guestBookForm = document.getElementById('guest-book-app-form')
