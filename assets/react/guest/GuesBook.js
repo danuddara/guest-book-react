@@ -16,7 +16,6 @@ export default function GuestBookApp() {
     }, [page]);
 
     const getGuests = () => {
-        console.log(page)
         axios.get('/api/guest/list?p=' + page).then(guests => {
             setGuests(guests.data)
             setLoading(false)
@@ -32,7 +31,6 @@ export default function GuestBookApp() {
     }
 
     const pageButtonClick = (event, key) => {
-        console.log(key)
         setPage(key);
         getGuests()
     }
